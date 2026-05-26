@@ -1,0 +1,574 @@
+---
+interface Props {
+  reels?: ReelData[];
+  showHeader?: boolean;
+  start?: number;
+  end?: number;
+}
+
+type ReelData = {
+  code: string;
+  estrellas: number;
+  resena: string;
+  nombre: string;
+  verificada: boolean;
+  tags: string[];
+};
+
+const {
+  reels: reelsProp,
+  showHeader = false,
+  start = 0,
+  end,
+} = Astro.props;
+
+const defaultReels: ReelData[] = [
+  {
+    code: "DQkkzPVDgre",
+    estrellas: 5,
+    resena:
+      "Mi piel quedó increíble desde la primera sesión. Nunca esperé resultados tan rápidos.",
+    nombre: "Clienta Amy Spa",
+    verificada: true,
+    tags: ["Limpieza facial", "Primera sesión"],
+  },
+  {
+    code: "DYndoTvugP7",
+    estrellas: 5,
+    resena:
+      "Resultados reales desde la primera vez. Mi piel se ve más luminosa y limpia.",
+    nombre: "Clienta Amy Spa",
+    verificada: true,
+    tags: ["Piel luminosa", "Sin químicos"],
+  },
+  {
+    code: "DXwdNO5uuIi",
+    estrellas: 5,
+    resena:
+      "La mejor decisión para mi piel. El ambiente es súper tranquilo y profesional.",
+    nombre: "Clienta Amy Spa",
+    verificada: true,
+    tags: ["Piel grasa", "Acné"],
+  },
+  {
+    code: "DTeF3eZDu4N",
+    estrellas: 5,
+    resena:
+      "Llevo 3 sesiones y mis poros se ven muchísimo más limpios. Lo recomiendo al 100%.",
+    nombre: "Clienta Amy Spa",
+    verificada: true,
+    tags: ["Poros limpios", "Resultados reales"],
+  },
+  {
+    code: "DQsTmHRjma3",
+    estrellas: 5,
+    resena:
+      "Salí sintiéndome renovada. El trato es muy personalizado y los productos son suaves.",
+    nombre: "Clienta Amy Spa",
+    verificada: true,
+    tags: ["Piel sensible", "Productos naturales"],
+  },
+  {
+    code: "DRvQ-5Tj-EC",
+    estrellas: 5,
+    resena:
+      "Desde que voy a Amy Spa mi piel mejoró un 100%. Ya agendé mi próxima cita.",
+    nombre: "Clienta Amy Spa",
+    verificada: true,
+    tags: ["Transformación", "Clienta frecuente"],
+  },
+];
+
+const allReels = reelsProp ?? defaultReels;
+const reels = allReels.slice(start, end);
+---
+
+{
+  showHeader && (
+    <div class="mb-10 text-center md:mb-12">
+      <p class="section-label scroll-reveal">Resultados</p>
+      <h2 class="gsap-split-title font-display mt-2 text-3xl font-light text-[#1A1A1A] md:text-5xl">
+        Ellas ya lo vivieron
+      </h2>
+      <p class="scroll-reveal mt-4 text-sm font-light text-[#1A1A1A]/60 md:text-base">
+        Clientas reales, resultados reales.
+      </p>
+    </div>
+  )
+}
+
+<div class="reels-mobile-wrap">
+  <button
+    type="button"
+    class="reels-mobile-arrow reels-mobile-arrow-prev"
+    aria-label="Reel anterior"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="18"
+      height="18"
+    >
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+
+  <div class="reels-grid" role="list">
+  {
+    reels.map((reel) => (
+      <article class="reel-review-card scroll-reveal" role="listitem">
+        <div class="reel-iframe-wrap">
+          <div class="reel-skeleton" aria-hidden="true" />
+          <iframe
+            class="reel-iframe"
+            src={`https://www.instagram.com/reel/${reel.code}/embed/`}
+            title={`Reel de Instagram - ${reel.code}`}
+            frameborder="0"
+            scrolling="no"
+            allowtransparency="true"
+            allow="encrypted-media; picture-in-picture; web-share"
+            loading="lazy"
+          />
+        </div>
+
+        <div class="reel-review-body">
+          <p
+            class="reel-review-stars"
+            aria-label={`${reel.estrellas} estrellas`}
+          >
+            {"★".repeat(reel.estrellas)}
+          </p>
+          <p class="reel-review-text">
+            <span class="reel-review-quote" aria-hidden="true">
+              “
+            </span>
+            {reel.resena}
+            <span class="reel-review-quote-end" aria-hidden="true">
+              ”
+            </span>
+          </p>
+          <p class="reel-review-author">
+            <span class="reel-review-name">{reel.nombre}</span>
+            {reel.verificada && (
+              <>
+                <span class="reel-review-sep" aria-hidden="true">
+                  ·
+                </span>
+                <span class="reel-review-verified">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    width="14"
+                    height="14"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 2L9.5 4.5L6 4L5 7.5L2 9L3.5 12L2 15L5 16.5L6 20L9.5 19.5L12 22L14.5 19.5L18 20L19 16.5L22 15L20.5 12L22 9L19 7.5L18 4L14.5 4.5L12 2Z" />
+                    <path
+                      d="M10.5 14.5L16 9L14.5 7.5L10.5 11.5L9 10L7.5 11.5L10.5 14.5Z"
+                      fill="#ffffff"
+                    />
+                  </svg>
+                  Clienta Verificada
+                </span>
+              </>
+            )}
+          </p>
+          <div class="reel-review-tags">
+            {reel.tags.map((tag) => (
+              <span class="reel-review-tag">{tag}</span>
+            ))}
+          </div>
+        </div>
+      </article>
+    ))
+  }
+  </div>
+
+  <button
+    type="button"
+    class="reels-mobile-arrow reels-mobile-arrow-next"
+    aria-label="Siguiente reel"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="18"
+      height="18"
+    >
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+</div>
+
+<style>
+  .reels-mobile-wrap {
+    position: relative;
+  }
+
+  .reels-mobile-arrow {
+    display: none;
+  }
+
+  .reels-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media (min-width: 640px) {
+    .reels-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .reels-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Mobile: carrusel horizontal con scroll-snap */
+  @media (max-width: 639px) {
+    .reels-grid {
+      display: flex;
+      grid-template-columns: none;
+      gap: 14px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 5vw;
+      margin: 0 -5vw;
+      scrollbar-width: none;
+    }
+
+    .reels-grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .reel-review-card {
+      flex: 0 0 86vw;
+      max-width: 360px;
+      scroll-snap-align: center;
+    }
+
+    .reels-mobile-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 180px;
+      z-index: 5;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background-color: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(10, 10, 10, 0.08);
+      color: #0a0a0a;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(10, 10, 10, 0.12);
+      transition:
+        background-color 0.2s ease,
+        transform 0.15s ease,
+        opacity 0.2s ease;
+      padding: 0;
+    }
+
+    .reels-mobile-arrow:active {
+      transform: scale(0.92);
+      background-color: rgba(255, 255, 255, 0.92);
+    }
+
+    .reels-mobile-arrow-prev {
+      left: 8px;
+    }
+
+    .reels-mobile-arrow-next {
+      right: 8px;
+    }
+
+    .reels-mobile-arrow[aria-disabled="true"] {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+
+  .reel-review-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    transition:
+      box-shadow 0.25s ease,
+      transform 0.25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .reel-review-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+  }
+
+  .reel-iframe-wrap {
+    position: relative;
+    width: 100%;
+    height: 720px;
+    background-color: #ffffff;
+    overflow: hidden;
+  }
+
+  .reel-skeleton {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      #f3f4f6 25%,
+      #e5e7eb 50%,
+      #f3f4f6 75%
+    );
+    background-size: 200% 100%;
+    animation: reelShimmer 1.5s infinite;
+    z-index: 1;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .reel-skeleton.hidden {
+    opacity: 0;
+  }
+
+  @keyframes reelShimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  .reel-iframe {
+    position: absolute;
+    top: -56px;
+    left: -8%;
+    width: 116%;
+    height: calc(100% + 112px);
+    border: 0;
+    display: block;
+    background-color: #ffffff;
+    z-index: 2;
+  }
+
+  .reel-review-body {
+    padding: 20px;
+    background-color: #ffffff;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .reel-review-stars {
+    color: var(--green-deep, #7ebc83);
+    font-size: 16px;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    line-height: 1;
+  }
+
+  .reel-review-text {
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 14px;
+    color: #374151;
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    font-weight: 300;
+    flex: 1;
+  }
+
+  .reel-review-quote,
+  .reel-review-quote-end {
+    color: var(--green-deep, #7ebc83);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 0;
+    margin: 0 1px;
+    vertical-align: -3px;
+  }
+
+  .reel-review-author {
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 13px;
+    color: #0a0a0a;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .reel-review-name {
+    font-weight: 500;
+    color: #0a0a0a;
+  }
+
+  .reel-review-sep {
+    color: #d1d5db;
+    font-weight: 300;
+  }
+
+  .reel-review-verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #6b7280;
+  }
+
+  .reel-review-verified svg {
+    color: var(--green-deep, #7ebc83);
+    flex-shrink: 0;
+  }
+
+  .reel-review-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .reel-review-tag {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-size: 11px;
+    font-family: "Poppins", system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  @media (max-width: 767px) {
+    .reel-iframe-wrap {
+      height: 560px;
+    }
+
+    .reel-iframe {
+      top: -56px;
+      left: -6%;
+      width: 112%;
+      height: calc(100% + 180px);
+    }
+
+    .reel-review-body {
+      padding: 16px 18px 18px;
+    }
+
+    .reel-review-text {
+      font-size: 13.5px;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .reel-review-stars {
+      margin-bottom: 8px;
+    }
+
+    .reel-review-author {
+      margin-bottom: 10px;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .reel-iframe-wrap {
+      height: 520px;
+    }
+
+    .reel-iframe {
+      top: -56px;
+      left: -5%;
+      width: 110%;
+      height: calc(100% + 200px);
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const iframes = document.querySelectorAll<HTMLIFrameElement>(
+      ".reel-iframe"
+    );
+
+    iframes.forEach((iframe) => {
+      const wrap = iframe.parentElement;
+      const skeleton = wrap?.querySelector(
+        ".reel-skeleton"
+      ) as HTMLElement | null;
+      if (!skeleton) return;
+
+      const hide = () => skeleton.classList.add("hidden");
+
+      iframe.addEventListener("load", hide);
+      window.setTimeout(hide, 3500);
+    });
+
+    document
+      .querySelectorAll<HTMLElement>(".reels-mobile-wrap")
+      .forEach((wrap) => {
+        const grid = wrap.querySelector<HTMLElement>(".reels-grid");
+        const prev = wrap.querySelector<HTMLButtonElement>(
+          ".reels-mobile-arrow-prev"
+        );
+        const next = wrap.querySelector<HTMLButtonElement>(
+          ".reels-mobile-arrow-next"
+        );
+        if (!grid || !prev || !next) return;
+
+        const card = grid.querySelector<HTMLElement>(".reel-review-card");
+
+        const getStep = () => {
+          if (card) return card.offsetWidth + 14;
+          return grid.clientWidth * 0.9;
+        };
+
+        const updateArrows = () => {
+          const max = grid.scrollWidth - grid.clientWidth - 2;
+          prev.setAttribute(
+            "aria-disabled",
+            grid.scrollLeft <= 2 ? "true" : "false"
+          );
+          next.setAttribute(
+            "aria-disabled",
+            grid.scrollLeft >= max ? "true" : "false"
+          );
+        };
+
+        prev.addEventListener("click", () => {
+          grid.scrollBy({ left: -getStep(), behavior: "smooth" });
+        });
+
+        next.addEventListener("click", () => {
+          grid.scrollBy({ left: getStep(), behavior: "smooth" });
+        });
+
+        grid.addEventListener("scroll", updateArrows, { passive: true });
+        window.addEventListener("resize", updateArrows);
+        updateArrows();
+      });
+  })();
+</script>

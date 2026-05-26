@@ -1,0 +1,154 @@
+---
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const benefitsCards = [
+  {
+    icon: "icono-confianza.png",
+    title: "Confianza que se nota",
+    description:
+      "Saldrás sintiéndote otra. Esa sensación de mirarte al espejo y verte radiante desde la primera sesión.",
+    tag: "Beneficio emocional",
+  },
+  {
+    icon: "icono-profunda.png",
+    title: "Resultados reales en tu piel",
+    description:
+      "Poros limpios, piel luminosa e hidratada. Sin químicos agresivos, con productos 100% naturales.",
+    tag: "Beneficio funcional",
+  },
+  {
+    icon: "icono-hidratante.png",
+    title: "Hecho para tu tipo de piel",
+    description:
+      "Ideal si tienes piel grasa, acné, puntos negros o simplemente quieres un reset completo para tu piel.",
+    tag: "Para ti si...",
+  },
+];
+---
+
+<section
+  id="beneficios"
+  class="bg-white px-5 py-12 md:px-8 md:py-20"
+  aria-label="Beneficios visuales"
+>
+  <div class="mx-auto max-w-6xl px-4">
+    <div class="text-center">
+      <p class="section-label scroll-reveal">Beneficios</p>
+      <h2
+        class="gsap-split-title font-display mt-2 text-3xl font-light text-[#0A0A0A] md:text-5xl"
+      >
+        Lo que tu piel va a sentir
+      </h2>
+      <p
+        class="scroll-reveal mx-auto mt-4 max-w-2xl text-sm font-light text-[#1A1A1A]/60 md:text-base"
+      >
+        Cada sesión en Amy Spa es una experiencia diseñada para transformar tu
+        piel y tu bienestar.
+      </p>
+    </div>
+
+    <div
+      class="mt-12 grid grid-cols-1 gap-5 md:mt-16 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8"
+    >
+      {
+        benefitsCards.map((card, i) => (
+          <article class="bv-card scroll-reveal" data-delay={`${i * 0.15}`}>
+            <div class="bv-icon" aria-hidden="true">
+              <img
+                src={`${base}imagenes/${card.icon}`}
+                alt=""
+                width="40"
+                height="40"
+                loading="lazy"
+              />
+            </div>
+            <h3 class="bv-title font-display">{card.title}</h3>
+            <p class="bv-desc">{card.description}</p>
+            <p class="bv-tag">{card.tag}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .bv-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 32px 24px;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .bv-card:hover {
+    border-color: var(--green, #a8d5a2);
+    transform: translateY(-2px);
+  }
+
+  .bv-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 999px;
+    background-color: var(--green-soft, #e8f3e5);
+    margin-bottom: 24px;
+  }
+
+  .bv-icon img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .bv-title {
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: #0a0a0a;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .bv-desc {
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 15px;
+    color: #6b7280;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .bv-tag {
+    margin-top: 24px;
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--green-deep, #7ebc83);
+    font-weight: 500;
+  }
+
+  @media (max-width: 767px) {
+    .bv-card {
+      padding: 28px 22px;
+    }
+
+    .bv-icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 20px;
+    }
+
+    .bv-icon img {
+      width: 36px;
+      height: 36px;
+    }
+  }
+</style>

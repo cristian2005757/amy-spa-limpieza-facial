@@ -1,0 +1,796 @@
+---
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+
+const historias = [
+  { file: "historia1.mp4", user: "clienta.1", inicial: "C", foto: "perfil1.png" },
+  { file: "historia2.mp4", user: "clienta.2", inicial: "C", foto: "perfil2.png" },
+  { file: "historia3.mp4", user: "clienta.3", inicial: "C", foto: "perfil3.png" },
+  { file: "historia4.mp4", user: "clienta.4", inicial: "C", foto: "perfil4.png" },
+  { file: "historia5.mp4", user: "clienta.5", inicial: "C", foto: "perfil5.png" },
+];
+
+const historiasJSON = historias.map((h) => ({
+  src: `${base}videos/${h.file}`,
+  user: h.user,
+  inicial: h.inicial,
+  foto: h.foto ? `${base}imagenes/${h.foto}` : null,
+}));
+---
+
+<div class="hist-row scroll-reveal" role="list" aria-label="Historias de clientas">
+  {
+    historias.map((h, i) => (
+      <button
+        type="button"
+        class="hist-bubble"
+        data-index={i}
+        data-user={h.user}
+        aria-label={`Ver historia de ${h.user}`}
+        role="listitem"
+      >
+        <span class="hist-ring" aria-hidden="true">
+          <span class="hist-avatar">
+            {h.foto ? (
+              <img
+                src={`${base}imagenes/${h.foto}`}
+                alt=""
+                loading="lazy"
+                width="80"
+                height="80"
+              />
+            ) : (
+              h.inicial
+            )}
+          </span>
+        </span>
+        <span class="hist-username">{h.user}</span>
+      </button>
+    ))
+  }
+</div>
+
+<!-- Visor de historia (modal) -->
+<div
+  id="hist-modal"
+  class="hist-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Visor de historias"
+  hidden
+>
+  <button
+    type="button"
+    id="hist-nav-prev"
+    class="hist-nav hist-nav-prev"
+    aria-label="Historia anterior"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="22"
+      height="22"
+    >
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+
+  <div class="hist-viewer">
+    <div id="hist-progress" class="hist-progress"></div>
+
+    <div class="hist-header">
+      <div class="hist-header-left">
+        <span class="hist-header-avatar">
+          <span id="hist-header-initial">C</span>
+        </span>
+        <div class="hist-header-meta">
+          <p id="hist-header-user" class="hist-header-user">clienta.1</p>
+          <p class="hist-header-time">Hace un momento</p>
+        </div>
+      </div>
+      <div class="hist-header-actions">
+        <button
+          type="button"
+          id="hist-pause"
+          class="hist-action-btn"
+          aria-label="Pausar / reanudar"
+        >
+          <svg
+            id="hist-icon-pause"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            width="18"
+            height="18"
+          >
+            <rect x="6" y="5" width="4" height="14" rx="1"></rect>
+            <rect x="14" y="5" width="4" height="14" rx="1"></rect>
+          </svg>
+          <svg
+            id="hist-icon-play"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            width="18"
+            height="18"
+            style="display:none;"
+          >
+            <polygon points="7 4 19 12 7 20 7 4"></polygon>
+          </svg>
+        </button>
+        <button
+          type="button"
+          id="hist-mute"
+          class="hist-action-btn"
+          aria-label="Silenciar / activar audio"
+        >
+          <svg
+            id="hist-icon-muted"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            width="18"
+            height="18"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+          <svg
+            id="hist-icon-sound"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            width="18"
+            height="18"
+            style="display:none;"
+          >
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+        </button>
+        <button
+          type="button"
+          id="hist-close"
+          class="hist-action-btn"
+          aria-label="Cerrar"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            width="20"
+            height="20"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <video
+      id="hist-video"
+      class="hist-video"
+      playsinline
+      muted
+      preload="metadata"
+    ></video>
+
+    <button
+      type="button"
+      id="hist-tap-prev"
+      class="hist-tap hist-tap-prev"
+      aria-label="Historia anterior"></button>
+    <button
+      type="button"
+      id="hist-tap-next"
+      class="hist-tap hist-tap-next"
+      aria-label="Historia siguiente"></button>
+  </div>
+
+  <button
+    type="button"
+    id="hist-nav-next"
+    class="hist-nav hist-nav-next"
+    aria-label="Historia siguiente"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      width="22"
+      height="22"
+    >
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+</div>
+
+<style>
+  .hist-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .hist-bubble {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+
+  .hist-bubble:hover {
+    transform: scale(1.06);
+  }
+
+  .hist-bubble:focus-visible {
+    outline: 2px solid var(--green-deep, #7ebc83);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
+
+  .hist-ring {
+    width: 78px;
+    height: 78px;
+    border-radius: 999px;
+    padding: 2.5px;
+    background: linear-gradient(
+      45deg,
+      #feda77 0%,
+      #f58529 25%,
+      #dd2a7b 50%,
+      #8134af 75%,
+      #515bd4 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hist-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    background-color: #e5e7eb;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    border: 2px solid #ffffff;
+    overflow: hidden;
+  }
+
+  .hist-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 28%;
+    display: block;
+    border-radius: 999px;
+  }
+
+  .hist-username {
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #4b5563;
+    max-width: 84px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: 0;
+    margin-top: 2px;
+  }
+
+  /* Mobile: scroll horizontal con snap (carrusel nativo) */
+  @media (max-width: 640px) {
+    .hist-row {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      gap: 14px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 5vw 8px;
+      margin: 0 -5vw;
+      scrollbar-width: none;
+    }
+
+    .hist-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hist-bubble {
+      flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+
+    .hist-ring {
+      width: 70px;
+      height: 70px;
+      padding: 2.5px;
+    }
+
+    .hist-avatar {
+      font-size: 22px;
+    }
+
+    .hist-username {
+      font-size: 11px;
+      max-width: 76px;
+    }
+  }
+
+  /* ===== MODAL ===== */
+  .hist-modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    animation: histFadeIn 0.2s ease;
+  }
+
+  .hist-modal[hidden] {
+    display: none;
+  }
+
+  @keyframes histFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .hist-viewer {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    height: min(90vh, 740px);
+    aspect-ratio: 9 / 16;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: #000;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  .hist-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 3px;
+    padding: 8px 8px 0;
+    z-index: 4;
+  }
+
+  .hist-progress-seg {
+    flex: 1;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hist-progress-fill {
+    position: absolute;
+    inset: 0;
+    background-color: #fff;
+    width: 0;
+    transform-origin: left;
+  }
+
+  .hist-progress-seg.done .hist-progress-fill {
+    width: 100%;
+  }
+
+  .hist-progress-seg.active .hist-progress-fill {
+    animation: histFillBar linear forwards;
+    animation-duration: var(--hist-duration, 5s);
+    width: 100%;
+  }
+
+  .hist-progress-seg.active.paused .hist-progress-fill {
+    animation-play-state: paused;
+  }
+
+  @keyframes histFillBar {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  .hist-header {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    color: #fff;
+  }
+
+  .hist-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hist-header-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: linear-gradient(
+      45deg,
+      #feda77 0%,
+      #f58529 25%,
+      #dd2a7b 50%,
+      #8134af 75%,
+      #515bd4 100%
+    );
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hist-header-avatar > span {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    background-color: #e5e7eb;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1.5px solid #000;
+    overflow: hidden;
+  }
+
+  .hist-header-avatar > span img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 999px;
+  }
+
+  .hist-header-meta {
+    line-height: 1.1;
+  }
+
+  .hist-header-user {
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 0.01em;
+  }
+
+  .hist-header-time {
+    font-family: "Poppins", system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 2px;
+  }
+
+  .hist-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .hist-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: transparent;
+    border: 0;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .hist-action-btn:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .hist-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background-color: #000;
+  }
+
+  .hist-tap {
+    position: absolute;
+    top: 70px;
+    bottom: 0;
+    width: 35%;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .hist-tap:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .hist-tap-prev {
+    left: 0;
+  }
+  .hist-tap-next {
+    right: 0;
+  }
+
+  .hist-nav {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 0;
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    margin: 0 12px;
+    flex-shrink: 0;
+  }
+
+  .hist-nav:hover {
+    background-color: rgba(255, 255, 255, 0.22);
+  }
+
+  @media (min-width: 768px) {
+    .hist-nav {
+      display: flex;
+    }
+  }
+</style>
+
+<script define:vars={{ historias: historiasJSON }}>
+  (function () {
+    const modal = document.getElementById("hist-modal");
+    if (!modal) return;
+
+    const video = document.getElementById("hist-video");
+    const progress = document.getElementById("hist-progress");
+    const headerUser = document.getElementById("hist-header-user");
+    const headerInitial = document.getElementById("hist-header-initial");
+    const btnPause = document.getElementById("hist-pause");
+    const btnMute = document.getElementById("hist-mute");
+    const btnClose = document.getElementById("hist-close");
+    const navPrev = document.getElementById("hist-nav-prev");
+    const navNext = document.getElementById("hist-nav-next");
+    const tapPrev = document.getElementById("hist-tap-prev");
+    const tapNext = document.getElementById("hist-tap-next");
+    const iconPause = document.getElementById("hist-icon-pause");
+    const iconPlay = document.getElementById("hist-icon-play");
+    const iconMuted = document.getElementById("hist-icon-muted");
+    const iconSound = document.getElementById("hist-icon-sound");
+    const bubbles = document.querySelectorAll(".hist-bubble");
+
+    let currentIndex = 0;
+    let isPaused = false;
+
+    function buildProgressBars() {
+      progress.innerHTML = "";
+      historias.forEach(() => {
+        const seg = document.createElement("div");
+        seg.className = "hist-progress-seg";
+        const fill = document.createElement("div");
+        fill.className = "hist-progress-fill";
+        seg.appendChild(fill);
+        progress.appendChild(seg);
+      });
+    }
+
+    function refreshProgressStates() {
+      const segs = progress.querySelectorAll(".hist-progress-seg");
+      segs.forEach((seg, i) => {
+        seg.classList.remove("done", "active", "paused");
+        if (i < currentIndex) seg.classList.add("done");
+        if (i === currentIndex) seg.classList.add("active");
+      });
+    }
+
+    function loadCurrent() {
+      const h = historias[currentIndex];
+      if (!h) return;
+      headerUser.textContent = h.user;
+      if (h.foto) {
+        headerInitial.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = h.foto;
+        img.alt = "";
+        img.loading = "lazy";
+        headerInitial.appendChild(img);
+      } else {
+        headerInitial.textContent = h.inicial;
+      }
+      video.src = h.src;
+      video.muted = true;
+      iconMuted.style.display = "";
+      iconSound.style.display = "none";
+      isPaused = false;
+      iconPause.style.display = "";
+      iconPlay.style.display = "none";
+
+      refreshProgressStates();
+
+      video.addEventListener(
+        "loadedmetadata",
+        function onMeta() {
+          const dur = isFinite(video.duration) && video.duration > 0
+            ? video.duration
+            : 6;
+          const seg = progress.querySelectorAll(".hist-progress-seg")[
+            currentIndex
+          ];
+          if (seg) seg.style.setProperty("--hist-duration", dur + "s");
+          video.removeEventListener("loadedmetadata", onMeta);
+        }
+      );
+
+      const playPromise = video.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {});
+      }
+    }
+
+    function abrirHistoria(index) {
+      currentIndex = index;
+      buildProgressBars();
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      loadCurrent();
+    }
+
+    function cerrarModal() {
+      modal.hidden = true;
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+      document.body.style.overflow = "";
+      const segs = progress.querySelectorAll(".hist-progress-seg");
+      segs.forEach((s) => s.classList.remove("active", "done", "paused"));
+    }
+
+    function siguiente() {
+      if (currentIndex < historias.length - 1) {
+        currentIndex++;
+        loadCurrent();
+      } else {
+        cerrarModal();
+      }
+    }
+
+    function anterior() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        loadCurrent();
+      }
+    }
+
+    function togglePause() {
+      const seg = progress.querySelectorAll(".hist-progress-seg")[currentIndex];
+      if (isPaused) {
+        video.play().catch(() => {});
+        seg && seg.classList.remove("paused");
+        iconPause.style.display = "";
+        iconPlay.style.display = "none";
+        isPaused = false;
+      } else {
+        video.pause();
+        seg && seg.classList.add("paused");
+        iconPause.style.display = "none";
+        iconPlay.style.display = "";
+        isPaused = true;
+      }
+    }
+
+    function toggleMute() {
+      video.muted = !video.muted;
+      if (video.muted) {
+        iconMuted.style.display = "";
+        iconSound.style.display = "none";
+      } else {
+        iconMuted.style.display = "none";
+        iconSound.style.display = "";
+      }
+    }
+
+    bubbles.forEach((b) => {
+      b.addEventListener("click", () => {
+        const idx = parseInt(b.getAttribute("data-index") || "0", 10);
+        abrirHistoria(idx);
+      });
+    });
+
+    btnClose.addEventListener("click", cerrarModal);
+    btnPause.addEventListener("click", togglePause);
+    btnMute.addEventListener("click", toggleMute);
+    navPrev.addEventListener("click", anterior);
+    navNext.addEventListener("click", siguiente);
+    tapPrev.addEventListener("click", anterior);
+    tapNext.addEventListener("click", siguiente);
+
+    video.addEventListener("ended", siguiente);
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) cerrarModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (modal.hidden) return;
+      if (e.key === "Escape") cerrarModal();
+      if (e.key === "ArrowLeft") anterior();
+      if (e.key === "ArrowRight") siguiente();
+      if (e.key === " ") {
+        e.preventDefault();
+        togglePause();
+      }
+    });
+  })();
+</script>
