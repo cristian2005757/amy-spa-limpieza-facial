@@ -1,7 +1,9 @@
 ---
 import AntesDespues from "../components/AntesDespues.astro";
 import BeneficiosVisuales from "../components/BeneficiosVisuales.astro";
+import ExperienciaAmy from "../components/ExperienciaAmy.astro";
 import HistoriasInstagram from "../components/HistoriasInstagram.astro";
+import Problema from "../components/Problema.astro";
 import ReelsInstagram from "../components/ReelsInstagram.astro";
 
 const base = import.meta.env.BASE_URL.endsWith("/")
@@ -11,13 +13,13 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 const WA_NUMBER = "573219644575";
 const WA_URL = `https://wa.me/${WA_NUMBER}`;
 const WA_MSG = encodeURIComponent(
-  "Hola, me gustaría agendar una limpieza facial en Amy Spa."
+  "Hola, me gustaría agendar una limpieza facial en Amy."
 );
 const WA_LINK = `${WA_URL}?text=${WA_MSG}`;
 
 const waLinkFor = (service) =>
   `${WA_URL}?text=${encodeURIComponent(
-    `Hola, me gustaría agendar una cita para ${service} en Amy Spa.`
+    `Hola, me gustaría agendar una cita para ${service} en Amy.`
   )}`;
 
 const waLinkText = (msg) => `${WA_URL}?text=${encodeURIComponent(msg)}`;
@@ -747,6 +749,81 @@ const faqItems = [
         letter-spacing: 0.04em !important;
         color: rgba(10, 10, 10, 0.55) !important;
         margin-top: 0.75rem;
+      }
+
+      .emotional-eyebrow {
+        font-family: "Poppins", system-ui, sans-serif;
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        font-style: normal !important;
+        line-height: 1.4 !important;
+        letter-spacing: 0.2em !important;
+        text-transform: uppercase;
+        color: var(--green-deep) !important;
+        margin-bottom: 0.75rem;
+      }
+
+      .solucion-checks {
+        list-style: none;
+        padding: 0;
+        margin: 24px 0 0;
+        display: inline-flex;
+        flex-direction: column;
+        gap: 12px;
+        text-align: left;
+      }
+
+      .solucion-check {
+        font-family: "Poppins", system-ui, sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 1.5;
+        color: #0a0a0a;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .solucion-check::before {
+        content: "✔";
+        color: var(--green-deep);
+        font-weight: 700;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+
+      .solucion-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 32px;
+        padding: 14px 32px;
+        background-color: #0a0a0a;
+        color: #ffffff;
+        border-radius: 999px;
+        font-family: "Poppins", system-ui, sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        text-decoration: none;
+        letter-spacing: 0.01em;
+        transition:
+          background-color 0.25s ease,
+          transform 0.15s ease,
+          box-shadow 0.25s ease;
+        box-shadow: 0 4px 12px rgba(10, 10, 10, 0.12);
+      }
+
+      .solucion-cta:hover {
+        background-color: var(--green-deep);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(126, 188, 131, 0.35);
+      }
+
+      .solucion-cta:focus-visible {
+        outline: 2px solid var(--green-deep);
+        outline-offset: 3px;
       }
 
       .uso-block {
@@ -2500,32 +2577,20 @@ const faqItems = [
           class="relative z-10 flex h-full min-h-[100vh] items-center justify-center px-5 md:px-8"
         >
           <div class="mx-auto max-w-4xl text-center">
-            <div id="hero-urgency" class="urgency-badge mb-5">
-              <span aria-hidden="true">🔥</span>
-              <span>Solo 8 citas disponibles esta semana</span>
-            </div>
-
-            <div id="hero-badge" class="hero-glass-badge mb-6">
-              <span aria-hidden="true">⭐⭐⭐⭐⭐</span>
-              <span class="font-medium">4.9</span>
-              <span class="opacity-70">·</span>
-              <span>+200 clientas satisfechas</span>
-            </div>
-
             <h1
               id="hero-title"
               class="font-display text-4xl leading-tight font-light text-white sm:text-5xl md:text-6xl lg:text-7xl"
             >
-              Tu piel merece una
-              <em class="font-normal italic text-[#A8D5A2]">transformación real</em>
+              Tu piel merece verse
+              <em class="font-normal italic text-[#A8D5A2]">más limpia y saludable</em>
             </h1>
 
             <p
               id="hero-subtitle"
               class="mx-auto mt-6 max-w-2xl text-base leading-relaxed font-light text-white/90 md:text-lg"
             >
-              Limpieza facial profesional con resultados visibles desde la primera
-              sesión.
+              No es solo una limpieza facial… es el primer paso para empezar a
+              cuidar tu piel correctamente
             </p>
 
             <div class="hero-price">
@@ -2542,7 +2607,7 @@ const faqItems = [
                 class="btn-cta-white btn-cta-xl"
               >
                 <span aria-hidden="true">💬</span>
-                <span>Reservar mi cita ahora</span>
+                <span>Agendar visita</span>
               </a>
               <p class="mt-4 text-xs tracking-widest text-white/70 uppercase">
                 Cupos limitados · Respuesta inmediata
@@ -2569,19 +2634,19 @@ const faqItems = [
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill="#F8F9FA"
+            fill="#FFFFFF"
             d="M0,48 C240,72 480,24 720,48 C960,72 1200,24 1440,48 L1440,80 L0,80 Z"
           ></path>
         </svg>
       </div>
 
-      <!-- ============ 3. BENEFICIOS VISUALES ============ -->
-      <BeneficiosVisuales />
+      <!-- ============ 3. PROBLEMA ============ -->
+      <Problema />
 
-      <!-- ============ 3b. BANNER EMOCIONAL CON VIDEO ============ -->
+      <!-- ============ 4. SOLUCIÓN / SERVICIO (BANNER EMOCIONAL CON VIDEO) ============ -->
       <section
-        class="bg-white px-5 pb-12 md:px-8 md:pb-20"
-        aria-label="La experiencia Amy Spa"
+        class="bg-white px-5 py-12 md:px-8 md:py-20"
+        aria-label="Solución: Limpieza Facial Esencial Amy"
       >
         <div class="mx-auto max-w-6xl">
           <div class="emotional-banner scroll-reveal">
@@ -2603,20 +2668,44 @@ const faqItems = [
             </div>
             <div class="emotional-content">
               <span class="emotional-quote" aria-hidden="true">“</span>
-              <p>Siéntete segura y radiante con tu piel.</p>
+              <p class="emotional-eyebrow">Solución</p>
+              <p>Limpieza Facial Esencial Amy</p>
               <span class="emotional-rule" aria-hidden="true"></span>
               <p class="emotional-caption">
-                Cada sesión, una experiencia hecha para ti.
+                Ideal para empezar a cuidar tu piel profesionalmente
               </p>
+
+              <ul class="solucion-checks">
+                <li class="solucion-check">Higieniza la piel</li>
+                <li class="solucion-check">Remueve impurezas</li>
+                <li class="solucion-check">Exfolia suavemente</li>
+                <li class="solucion-check">Hidrata y refresca el rostro</li>
+              </ul>
+
+              <a
+                href={WA_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="solucion-cta"
+              >
+                <span>Agendar mi visita</span>
+                <span aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ============ 4. ANTES / DESPUÉS ============ -->
+      <!-- ============ 5. EXPERIENCIA AMY ============ -->
+      <ExperienciaAmy />
+
+      <!-- ============ 6. BENEFICIOS VISUALES ============ -->
+      <BeneficiosVisuales />
+
+      <!-- ============ 7. ANTES / DESPUÉS ============ -->
       <AntesDespues />
 
-      <!-- ============ 5. PRUEBA SOCIAL — HISTORIAS + REELS DE CLIENTAS ============ -->
+      <!-- ============ 8. PRUEBA SOCIAL — HISTORIAS + REELS DE CLIENTAS ============ -->
       <section
         id="testimonios"
         class="bg-white px-5 py-20 md:px-8 md:py-28"
@@ -2647,7 +2736,7 @@ const faqItems = [
         </div>
       </section>
 
-      <!-- ============ 6. COMPARATIVA Y DIFERENCIACIÓN ============ -->
+      <!-- ============ 9. COMPARATIVA Y DIFERENCIACIÓN ============ -->
       <section
         id="comparativa"
         class="compare-section px-5 py-20 md:px-8 md:py-28"
@@ -2702,7 +2791,7 @@ const faqItems = [
         </div>
       </section>
 
-      <!-- ============ 7. SERVICIO + PROTOCOLO ============ -->
+      <!-- ============ 10. SERVICIO + PROTOCOLO ============ -->
       <section
         id="servicios"
         class="bg-white px-5 pt-20 pb-10 md:px-8 md:pt-28 md:pb-14"
@@ -2835,7 +2924,7 @@ const faqItems = [
         </svg>
       </div>
 
-      <!-- ============ 8. MÁS REELS DE CLIENTAS ============ -->
+      <!-- ============ 11. MÁS REELS DE CLIENTAS ============ -->
       <section
         id="testimonios-mas"
         class="bg-[#F8F9FA] px-5 pt-8 pb-20 md:px-8 md:pt-12 md:pb-28"
@@ -2862,7 +2951,7 @@ const faqItems = [
         </div>
       </section>
 
-      <!-- ============ 9. RESEÑAS DE GOOGLE ============ -->
+      <!-- ============ 12. RESEÑAS DE GOOGLE ============ -->
       <section
         id="google"
         class="bg-white px-5 py-20 md:px-8 md:py-28"
@@ -3053,7 +3142,7 @@ const faqItems = [
         </div>
       </section>
 
-      <!-- ============ 10. FAQ ============ -->
+      <!-- ============ 13. FAQ ============ -->
       <section
         id="faq"
         class="bg-white px-5 py-20 md:px-8 md:py-28"
@@ -3084,7 +3173,7 @@ const faqItems = [
         </div>
       </section>
 
-      <!-- ============ 11. CTA FINAL ============ -->
+      <!-- ============ 14. CTA FINAL ============ -->
       <section
         id="contacto"
         class="cta-final px-5 py-24 md:px-8 md:py-32"
@@ -3146,7 +3235,7 @@ const faqItems = [
       </section>
     </main>
 
-    <!-- ============ 12. FOOTER ============ -->
+    <!-- ============ 15. FOOTER ============ -->
     <footer
       id="footer"
       class="border-t border-[#E8E8E8] bg-white px-5 py-12 md:px-8"
